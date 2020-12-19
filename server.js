@@ -10,3 +10,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static("./public"));
 
+// Blocks of code to add/edit/delete notes.
+app.post
+app.get
+app.delete
