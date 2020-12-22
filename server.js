@@ -29,7 +29,7 @@ let idNum = Math.floor(Math.random() * 50000);
 
 // Gets the notes that were previously saved on db.json
 app.get("/api/notes", (request, response) => {
-    response.sendFile(path.join(__dirname, "/db/db.json"));
+    response.sendFile(path.join(__dirname, "./db/db.json"));
 })
 
 // Posts the changes made and will be stored in the db.json file
@@ -49,7 +49,9 @@ app.post("/api/notes", (request, response) => {
 app.delete("/api/notes/:id", (request, response) => {
     let currentId = request.params.id;
     console.log(currentId);
-    
+    jsonParse.filter((oldNote) => {
+        return oldNote.id != currentId;
+    })
     response.json(jsonParse);
     console.log("Deleted");
 })
