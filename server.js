@@ -37,10 +37,10 @@ app.post("/api/notes", (request, response) => {
     const newNote = request.body;
     let id = idNum;
     console.log(id);
-    jsonParse.push(newNote);
     fs.writeFileSync("./db/db.json", JSON.stringify(newNote), (err) => {
         if (err) throw err;
     })
+    jsonParse.push(newNote);
     response.json(jsonParse);
     console.log("Saved");
 })
