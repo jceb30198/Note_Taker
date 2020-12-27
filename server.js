@@ -3,9 +3,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const fs = require("fs");
-const { json } = require("express");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Block to have JSON properly encoded and to serve the JavaScript to the public file directory
 app.use(express.urlencoded({extended: true}));
