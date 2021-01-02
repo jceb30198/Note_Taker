@@ -1,47 +1,48 @@
 // Dependencies
 const express = require("express");
-const path = require("path");
 const fs = require("fs");
-
-const PORT = process.env.PORT || 3000;
+const path = require("path");
 const app = express();
 
-let idNum = Math.floor(Math.random() * 50000);
+const PORT = process.env.PORT || 3000;
+
 // Block to have JSON properly encoded and to serve the JavaScript to the public file directory
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
+// Array to push to json folder
+const objArr = [];
+
 // These route the to the html files in the public folder
-// Forgot to add _dirname the first time. It is needed to return the directory that is running the script
 app.get("/notes", (request, response) => {
-    response.sendFile(path.join(__dirname, "/public/notes.html"));
-    console.log(response);
-});
+    response.sendFile(path.join(__dirname,"./public/notes.html"));
+    //console.log(response.json());
+})
+
+// Variables that will be used in multiple times in the methods
+let idNum = Math.floor(Math.random() * 50000);
 
 // Blocks of code that route the api to add/edit/delete
 // Gets the notes that were previously saved on db.json
 app.get("/api/notes", (request, response) => {
-    response.sendFile(path.join(__dirname, "/db/db.json"));
-    //console.log(request);
-    //console.log(__dirname);
-    //console.log("File has been gotten.");
+    response.sendFile(path.join(__dirname, "./db/db.json"));
+    //console.log(response);
 })
 
 // Posts the changes made and will be stored in the db.json file
 app.post("/api/notes", (request, response) => {
+    let jsonParse = JSON.parse(fs.readFileSync("./db/db.json", "utf-8"));
     let newNote = request.body;
-    newNote.id = idNum;
-    newNote = JSON.stringify(newNote);
-    fs.writeFile("./db/db.json", newNote, (err) => {
+    let id = idNum;
+    console.log(id);
+    objArr.push(newNote);
+    fs.writeFileSync("./db/db.json", JSON.stringify(objArr), (err) => {
         if (err) throw err;
-        else {
-        console.log(newNote);
-        }
-    response.json(newNote);
-    });
-    
-    console.log("File has been saved.");
+    })
+    //response.json(jsonParse);
+    console.log("Saved");
+    console.log(objArr);
 })
 
 // Handles the delete requests for the notes
@@ -57,10 +58,10 @@ app.delete("/api/notes/:id", (request, response) => {
 })
 
 app.get("*", (request, response) => {
-    response.sendFile(path.join(__dirname + "/public/index.html"));
-});
+    response.sendFile(path.join(__dirname,"./public/index.html"));
+    //console.log(response);
+})
 
-// Server listener
 app.listen(PORT, () => {
     console.log("Listening on PORT: " + PORT);
 })
