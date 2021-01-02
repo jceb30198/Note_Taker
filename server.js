@@ -11,8 +11,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
-// Array to push to json folder
-const objArr = [];
 
 // This route the to the html files in the public folder
 app.get("/notes", (request, response) => {
@@ -20,7 +18,22 @@ app.get("/notes", (request, response) => {
 })
 
 // Variables that will be used in multiple times in the methods
-let idNum = Math.floor(Math.random() * 50000);
+// Array to push to json folder
+let objArr = [];
+
+// Generates new ID number
+function genId() {
+    let idNum = "";
+    let randArr = [];
+    for(let i = 0; i < 10; i++){
+        let randNum = Math.floor(Math.random() * 10);
+        randArr.push(randNum);
+        idNum += randArr[i];
+    }
+    idNum = parseInt(idNum);
+    console.log(idNum);
+    return idNum;
+}
 
 // This reads the files while on the page so it updates constantly
 let readFile = JSON.parse(fs.readFileSync("./db/db.json", "utf-8"));
@@ -31,12 +44,11 @@ app.get("/api/notes", (request, response) => {
     response.sendFile(path.join(__dirname, "./db/db.json"));
 })
 
-
 // Posts the changes made and will be stored in the db.json file
 app.post("/api/notes", (request, response) => {
     const newNote = request.body;
-    newNote.id = idNum;
-    console.log(newNote);
+    newNote.id = genId();
+    console.log(newNote.id);
     objArr.push(newNote);
     fs.writeFileSync("./db/db.json", JSON.stringify(objArr), (err) => {
         if (err) throw err;
@@ -50,10 +62,10 @@ app.post("/api/notes", (request, response) => {
 app.delete("/api/notes/:id", (request, response) => {
     let currentId = request.params.id;
     console.log(request.params);
-    readFile = readFile.filter(note => {
+    objArr = objArr.filter(note => {
         return note.id != currentId;
     })
-    fs.writeFileSync("./db/db.json", JSON.stringify(readFile), (err) => {
+    fs.writeFileSync("./db/db.json", JSON.stringify(objArr), (err) => {
         if(err) throw err;
     })
     response.json(readFile);
