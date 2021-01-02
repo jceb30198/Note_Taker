@@ -14,33 +14,34 @@ app.use(express.static(__dirname + "/public"));
 // Array to push to json folder
 const objArr = [];
 
-// These route the to the html files in the public folder
+// This route the to the html files in the public folder
 app.get("/notes", (request, response) => {
     response.sendFile(path.join(__dirname,"./public/notes.html"));
-    //console.log(response.json());
 })
 
 // Variables that will be used in multiple times in the methods
 let idNum = Math.floor(Math.random() * 50000);
 
+// This reads the files while on the page so it updates constantly
+let readFile = JSON.parse(fs.readFileSync("./db/db.json", "utf-8"));
+
 // Blocks of code that route the api to add/edit/delete
 // Gets the notes that were previously saved on db.json
 app.get("/api/notes", (request, response) => {
     response.sendFile(path.join(__dirname, "./db/db.json"));
-    //console.log(response);
 })
+
 
 // Posts the changes made and will be stored in the db.json file
 app.post("/api/notes", (request, response) => {
-    let jsonParse = JSON.parse(fs.readFileSync("./db/db.json", "utf-8"));
-    let newNote = request.body;
-    let id = idNum;
-    console.log(id);
+    const newNote = request.body;
+    newNote.id = idNum;
+    console.log(newNote);
     objArr.push(newNote);
     fs.writeFileSync("./db/db.json", JSON.stringify(objArr), (err) => {
         if (err) throw err;
     })
-    //response.json(jsonParse);
+    response.json(readFile);
     console.log("Saved");
     console.log(objArr);
 })
@@ -49,19 +50,22 @@ app.post("/api/notes", (request, response) => {
 app.delete("/api/notes/:id", (request, response) => {
     let currentId = request.params.id;
     console.log(request.params);
-    console.log(currentId);
-    parseFile.filter((oldNote) => {
-        return oldNote.id != currentId;
+    readFile = readFile.filter(note => {
+        return note.id != currentId;
     })
-    response.json(parseFile);
-    console.log("File has been deleted.");
+    fs.writeFileSync("./db/db.json", JSON.stringify(readFile), (err) => {
+        if(err) throw err;
+    })
+    response.json(readFile);
+    console.log("Deleted");
 })
 
+// This route the to the html files in the public folder
 app.get("*", (request, response) => {
     response.sendFile(path.join(__dirname,"./public/index.html"));
-    //console.log(response);
 })
 
+// Shows that the server is up
 app.listen(PORT, () => {
     console.log("Listening on PORT: " + PORT);
 })
