@@ -35,6 +35,7 @@ Note taker is a web application that allows the user to write and save notes wit
 - Express.js
 
 ## Future Features
+- Allow the user to edit the body and subject of previously made notes.
 
 ## Authors
 - Jack Ceballos
