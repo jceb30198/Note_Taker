@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [Description](#description)
-- [Features](#features)
+- [Features and Layout](#features-and-layout)
 - [Technology Used](#technology-used)
 - [Future Features](#future-features)
 - [Authors](#authors)
@@ -10,7 +10,7 @@
 ## Description
 Note taker is a web application that allows the user to write and save notes with a subject. Once a note's use has expired, the user can delete the note. The application uses Bootstrap for the styling and Font Awesome for the icons to compliment the styling. Node.js and Express.js are used for the backend server along with the backend API then the frontend uses JavaScript and jQuery to use the API.
 
-## Features
+## Features and Layout
 - Landing page before seeing the appplication.
 ![Landing Page](public/assets/images/landing.png)
 - Main page of the application where the side-bar on the left shows if there were notes made previously.
